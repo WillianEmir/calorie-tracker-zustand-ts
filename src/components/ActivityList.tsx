@@ -1,25 +1,13 @@
-import { Dispatch, SetStateAction } from 'react'
 import { PencilSquareIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import { Activity } from "../types"
+import { useActivity } from '../store/store'
 
-type ActivityListProps = {
-  activities: Activity[],
-  SetActivity: Dispatch<SetStateAction<Activity>>,
-  setActivities: Dispatch<SetStateAction<Activity[]>>
-}
+export default function ActivityList() {
 
-export default function ActivityList({ activities, SetActivity, setActivities }: ActivityListProps) {
+  const {activities, deleteActivity, editActivity} = useActivity()
 
   const bgCategory = (category : Activity['category']) => {
     return category === 'Comida' ? 'bg-amber-500' : 'bg-lime-500'
-  }
-
-  const editActivity = (activity : Activity) => {
-    SetActivity(activity)
-  }
-
-  const deleteActivity = (id : Activity['id']) => {
-    setActivities(activities.filter(item => item.id !== id))
   }
 
   return (
@@ -39,7 +27,7 @@ export default function ActivityList({ activities, SetActivity, setActivities }:
             <div className="space-y-4">
               <PencilSquareIcon
                 className="size-8 cursor-pointer"
-                onClick={() => editActivity(activity)}
+                onClick={() => editActivity(activity.id)}
               />
 
               <XCircleIcon

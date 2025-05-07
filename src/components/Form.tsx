@@ -1,58 +1,25 @@
-import { ChangeEvent, Dispatch, SetStateAction, FormEvent, useMemo } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { useMemo } from 'react'
 import { categoriesData } from "../data/categoriesData"
-import { Activity } from '../types';
+import { useActivity } from '../store/store';
 
-type FormProps = {
-  Activity: Activity,
-  SetActivity: Dispatch<SetStateAction<Activity>>,
-  activities: Activity[],
-  setActivities: Dispatch<SetStateAction<Activity[]>>,
-  initialActivity: Activity
-}
+export default function Form() {
 
-export default function Form({Activity, SetActivity, activities, setActivities, initialActivity} : FormProps) {
-
-  const handleChange = (e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
-    SetActivity({
-      ...Activity,
-      [e.target.id]: e.target.id === 'calories' ? +e.target.value : e.target.value
-    })
-  }
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if(Activity.name === '' || Activity.calories <= 0 || Activity.category === '') {
-      alert('Todos los campos son obligatorios')
-      return
-    }
-
-    const existActivity = activities.some(item => item.id === Activity.id)
-
-    if(existActivity) {
-      const newActivies = activities.map(item => item.id === Activity.id ? {...Activity} : item )
-      setActivities(newActivies)
-    } else {
-      setActivities([...activities, Activity])
-    }
-
-    SetActivity({
-      ...initialActivity,
-      category: Activity.category,
-      id: uuidv4()
-    })
-  }
-
-  const saveButton = useMemo(() => {
-    return Activity.category === 'Comida' ?
-     'Guardar Comida' : 'Guardar Ejercicio'
-  }, [Activity.category])
-
+  const {activity, addActivity, changeActivityForm} = useActivity()
+   
+  const saveButton = useMemo(
+    () => activity.category === 'Comida' ? 'Guardar Comida' : 'Guardar Ejercicio', [activity.category]
+  )
+  
+  // useEffect(() => {
+  //   if(idEditing) {
+  //     SetActivity(activities.find(item => item.id === idEditing) ?? initialActivity)
+  //   }
+  // },[idEditing])
+  
   return (
     <form 
       className="bg-white p-5 rounded-md shadow-lg space-y-7"
-      onSubmit={handleSubmit}
+      onSubmit={addActivity}
     >
       <h2 className="text-center text-4xl font-medium my-4">¿Qué has hecho hoy?</h2>
 
@@ -61,8 +28,8 @@ export default function Form({Activity, SetActivity, activities, setActivities, 
         <select
           id="category"
           className="border border-slate-300 p-2 rounded-md"
-          value={Activity.category}
-          onChange={handleChange}
+          value={activity.category}
+          onChange={changeActivityForm}
         >
           <option value="">-- Seleccione una Opción --</option>
           {categoriesData.map(option => (
@@ -82,8 +49,8 @@ export default function Form({Activity, SetActivity, activities, setActivities, 
           type="text" 
           id="name"
           className="border border-slate-300 p-2 rounded-md"
-          value={Activity.name}
-          onChange={handleChange}
+          value={activity.name}
+          onChange={changeActivityForm}
           required
         />
       </div>
@@ -94,8 +61,8 @@ export default function Form({Activity, SetActivity, activities, setActivities, 
           type="number" 
           id="calories"
           className="border border-slate-300 p-2 rounded-md"
-          value={Activity.calories}
-          onChange={handleChange}
+          value={activity.calories}
+          onChange={changeActivityForm}
           required
         />
       </div>
