@@ -12,6 +12,7 @@ type ActivityState = {
   addActivity: (e: FormEvent<HTMLFormElement>) => void
   deleteActivity: (id: Activity['id']) => void
   editActivity: (id: Activity['id']) => void
+  restarApp: () => void
 }
 
 export const useActivity = create<ActivityState>()(persist((set, get) => ({
@@ -60,6 +61,13 @@ export const useActivity = create<ActivityState>()(persist((set, get) => ({
     set((state) => ({
       idEditing: id,
       activity: state.activities.find(item => item.id === id) 
+    }))
+  },
+  restarApp: () => {
+    set(() => ({
+      activities: [],
+      idEditing: '',
+      activity: { id: uuidv4(), category: 'Comida', name: '', calories: 0 }
     }))
   }
 }), {
