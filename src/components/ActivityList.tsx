@@ -4,20 +4,20 @@ import { useActivity } from '../store/store'
 
 export default function ActivityList() {
 
-  const {activities, deleteActivity, editActivity} = useActivity()
+  const { activities, deleteActivity, editActivity } = useActivity()
 
-  const bgCategory = (category : Activity['category']) => {
+  const bgCategory = (category: Activity['category']) => {
     return category === 'Comida' ? 'bg-amber-500' : 'bg-lime-500'
   }
 
   return (
     <>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-7">
+      <div className="grid sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-3 max-h-[470px] overflow-y-auto pl-4">
         {activities.map(activity => (
-          <div key={activity.id} className="flex justify-between items-center bg-white shadow rounded-md p-4 mx-2 relative">
+          <div key={activity.id} className="flex justify-between items-center bg-white shadow-md rounded-md p-3 mx-2 relative">
             <div>
               <p
-                className={`${bgCategory(activity.category)} block absolute -left-5 top-2 p-1 w-25 text-center text-white font-medium`}
+                className={`${bgCategory(activity.category)} block absolute -left-5 top-2 p-1 w-25 text-center text-white font-medium border border-slate-300`}
               >
                 {activity.category}
               </p>
